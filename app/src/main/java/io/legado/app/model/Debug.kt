@@ -2,7 +2,6 @@ package io.legado.app.model
 
 import android.annotation.SuppressLint
 import android.util.Log
-import io.legado.app.BuildConfig
 import io.legado.app.constant.AppPattern
 import io.legado.app.data.entities.*
 import io.legado.app.help.book.isWebFile

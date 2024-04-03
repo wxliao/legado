@@ -2,7 +2,6 @@ package io.legado.app.help.config
 
 import android.content.SharedPreferences
 import android.os.Build
-import io.legado.app.BuildConfig
 import io.legado.app.constant.AppConst
 import io.legado.app.constant.PreferKey
 import io.legado.app.data.appDb

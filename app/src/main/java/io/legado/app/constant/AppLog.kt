@@ -1,7 +1,6 @@
 package io.legado.app.constant
 
 import android.util.Log
-import io.legado.app.BuildConfig
 import io.legado.app.help.config.AppConfig
 import io.legado.app.utils.LogUtils
 import io.legado.app.utils.toastOnUi

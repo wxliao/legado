@@ -6,12 +6,12 @@ plugins {
 //    id 'com.google.devtools.ksp'
 //    id "com.google.gms.google-services"
 
-    alias libs.plugins.android.application
+    alias libs.plugins.android.library
     alias libs.plugins.kotlin.android
     alias libs.plugins.kotlin.parcelize
     alias libs.plugins.room
     alias libs.plugins.ksp
-    alias libs.plugins.google.services
+//    alias libs.plugins.google.services
 }
 apply from: 'download.gradle'
 
@@ -47,7 +47,7 @@ android {
         }
     }
     defaultConfig {
-        applicationId "io.legado.app"
+//        applicationId "io.legado.app"
         minSdk 21
         targetSdk 34
         versionCode 10000 + gitCommits
@@ -55,8 +55,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         project.ext.set("archivesBaseName", name + "_" + version)
 
-        buildConfigField "String", "Cronet_Version", "\"$CronetVersion\""
-        buildConfigField "String", "Cronet_Main_Version", "\"$CronetMainVersion\""
+//        buildConfigField "String", "Cronet_Version", "\"$CronetVersion\""
+//        buildConfigField "String", "Cronet_Main_Version", "\"$CronetMainVersion\""
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -77,37 +77,37 @@ android {
             if (project.hasProperty("RELEASE_STORE_FILE")) {
                 signingConfig signingConfigs.myConfig
             }
-            applicationIdSuffix '.release'
+//            applicationIdSuffix '.release'
 
             minifyEnabled true
-            shrinkResources true
+//            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'cronet-proguard-rules.pro'
         }
         debug {
             if (project.hasProperty("RELEASE_STORE_FILE")) {
                 signingConfig signingConfigs.myConfig
             }
-            applicationIdSuffix '.debug'
-            versionNameSuffix 'debug'
+//            applicationIdSuffix '.debug'
+//            versionNameSuffix 'debug'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'cronet-proguard-rules.pro'
         }
     }
     //noinspection GrDeprecatedAPIUsage
-    flavorDimensions = ['mode']
-    productFlavors {
-        app {
-            dimension "mode"
-            manifestPlaceholders.put("APP_CHANNEL_VALUE", "app")
-        }
-    }
+//    flavorDimensions = ['mode']
+//    productFlavors {
+//        app {
+//            dimension "mode"
+//            manifestPlaceholders.put("APP_CHANNEL_VALUE", "app")
+//        }
+//    }
 
-    android.applicationVariants.configureEach { variant ->
-        variant.outputs.configureEach {
-            def flavor = variant.productFlavors[0].name
-            outputFileName = "${name}_${flavor}_${defaultConfig.versionName}.apk"
-        }
-    }
+//    android.applicationVariants.configureEach { variant ->
+//        variant.outputs.configureEach {
+//            def flavor = variant.productFlavors[0].name
+//            outputFileName = "${name}_${flavor}_${defaultConfig.versionName}.apk"
+//        }
+//    }
 
 
     room {

@@ -6,7 +6,6 @@ import android.content.pm.ApplicationInfo
 import android.os.Build
 import android.text.TextUtils
 import androidx.annotation.Keep
-import io.legado.app.BuildConfig
 import io.legado.app.help.coroutine.Coroutine
 import io.legado.app.help.http.Cronet
 import io.legado.app.utils.DebugLog

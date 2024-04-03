@@ -2,12 +2,6 @@ package io.legado.app.data.entities
 
 import android.os.Parcelable
 import android.text.TextUtils
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
 import io.legado.app.constant.AppPattern
 import io.legado.app.constant.BookSourceType
 import io.legado.app.data.entities.rule.BookInfoRule
@@ -16,21 +10,13 @@ import io.legado.app.data.entities.rule.ExploreRule
 import io.legado.app.data.entities.rule.ReviewRule
 import io.legado.app.data.entities.rule.SearchRule
 import io.legado.app.data.entities.rule.TocRule
-import io.legado.app.utils.GSON
-import io.legado.app.utils.fromJsonObject
 import io.legado.app.utils.splitNotBlank
 import kotlinx.parcelize.Parcelize
 
 @Suppress("unused")
 @Parcelize
-@TypeConverters(BookSource.Converters::class)
-@Entity(
-    tableName = "book_sources",
-    indices = [(Index(value = ["bookSourceUrl"], unique = false))]
-)
 data class BookSource(
     // 地址，包括 http/https
-    @PrimaryKey
     var bookSourceUrl: String = "",
     // 名称
     var bookSourceName: String = "",
@@ -42,18 +28,14 @@ data class BookSource(
     // 详情页url正则
     var bookUrlPattern: String? = null,
     // 手动排序编号
-    @ColumnInfo(defaultValue = "0")
     var customOrder: Int = 0,
     // 是否启用
-    @ColumnInfo(defaultValue = "1")
     var enabled: Boolean = true,
     // 启用发现
-    @ColumnInfo(defaultValue = "1")
     var enabledExplore: Boolean = true,
     // js库
     override var jsLib: String? = null,
     // 启用okhttp CookieJAr 自动保存每次请求的cookie
-    @ColumnInfo(defaultValue = "0")
     override var enabledCookieJar: Boolean? = true,
     // 并发率
     override var concurrentRate: String? = null,
@@ -258,53 +240,53 @@ data class BookSource(
 
     private fun equal(a: String?, b: String?) = a == b || (a.isNullOrEmpty() && b.isNullOrEmpty())
 
-    class Converters {
-
-        @TypeConverter
-        fun exploreRuleToString(exploreRule: ExploreRule?): String =
-            GSON.toJson(exploreRule)
-
-        @TypeConverter
-        fun stringToExploreRule(json: String?) =
-            GSON.fromJsonObject<ExploreRule>(json).getOrNull()
-
-        @TypeConverter
-        fun searchRuleToString(searchRule: SearchRule?): String =
-            GSON.toJson(searchRule)
-
-        @TypeConverter
-        fun stringToSearchRule(json: String?) =
-            GSON.fromJsonObject<SearchRule>(json).getOrNull()
-
-        @TypeConverter
-        fun bookInfoRuleToString(bookInfoRule: BookInfoRule?): String =
-            GSON.toJson(bookInfoRule)
-
-        @TypeConverter
-        fun stringToBookInfoRule(json: String?) =
-            GSON.fromJsonObject<BookInfoRule>(json).getOrNull()
-
-        @TypeConverter
-        fun tocRuleToString(tocRule: TocRule?): String =
-            GSON.toJson(tocRule)
-
-        @TypeConverter
-        fun stringToTocRule(json: String?) =
-            GSON.fromJsonObject<TocRule>(json).getOrNull()
-
-        @TypeConverter
-        fun contentRuleToString(contentRule: ContentRule?): String =
-            GSON.toJson(contentRule)
-
-        @TypeConverter
-        fun stringToContentRule(json: String?) =
-            GSON.fromJsonObject<ContentRule>(json).getOrNull()
-
-        @TypeConverter
-        fun stringToReviewRule(json: String?): ReviewRule? = null
-
-        @TypeConverter
-        fun reviewRuleToString(reviewRule: ReviewRule?): String = "null"
-
-    }
+//    class Converters {
+//
+//        @TypeConverter
+//        fun exploreRuleToString(exploreRule: ExploreRule?): String =
+//            GSON.toJson(exploreRule)
+//
+//        @TypeConverter
+//        fun stringToExploreRule(json: String?) =
+//            GSON.fromJsonObject<ExploreRule>(json).getOrNull()
+//
+//        @TypeConverter
+//        fun searchRuleToString(searchRule: SearchRule?): String =
+//            GSON.toJson(searchRule)
+//
+//        @TypeConverter
+//        fun stringToSearchRule(json: String?) =
+//            GSON.fromJsonObject<SearchRule>(json).getOrNull()
+//
+//        @TypeConverter
+//        fun bookInfoRuleToString(bookInfoRule: BookInfoRule?): String =
+//            GSON.toJson(bookInfoRule)
+//
+//        @TypeConverter
+//        fun stringToBookInfoRule(json: String?) =
+//            GSON.fromJsonObject<BookInfoRule>(json).getOrNull()
+//
+//        @TypeConverter
+//        fun tocRuleToString(tocRule: TocRule?): String =
+//            GSON.toJson(tocRule)
+//
+//        @TypeConverter
+//        fun stringToTocRule(json: String?) =
+//            GSON.fromJsonObject<TocRule>(json).getOrNull()
+//
+//        @TypeConverter
+//        fun contentRuleToString(contentRule: ContentRule?): String =
+//            GSON.toJson(contentRule)
+//
+//        @TypeConverter
+//        fun stringToContentRule(json: String?) =
+//            GSON.fromJsonObject<ContentRule>(json).getOrNull()
+//
+//        @TypeConverter
+//        fun stringToReviewRule(json: String?): ReviewRule? = null
+//
+//        @TypeConverter
+//        fun reviewRuleToString(reviewRule: ReviewRule?): String = "null"
+//
+//    }
 }

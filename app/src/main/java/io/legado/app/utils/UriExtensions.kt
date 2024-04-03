@@ -5,14 +5,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.ParcelFileDescriptor
-import androidx.appcompat.app.AppCompatActivity
 import androidx.documentfile.provider.DocumentFile
-import androidx.fragment.app.Fragment
-import io.legado.app.R
 import io.legado.app.constant.AppLog
 import io.legado.app.exception.NoStackTraceException
-import io.legado.app.lib.permission.Permissions
-import io.legado.app.lib.permission.PermissionsCompat
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okio.BufferedSink
@@ -29,86 +24,86 @@ fun Uri.isContentScheme() = this.scheme == "content"
 
 fun Uri.isFileScheme() = this.scheme == "file"
 
-/**
- * 读取URI
- */
-fun AppCompatActivity.readUri(
-    uri: Uri?,
-    success: (fileDoc: FileDoc, inputStream: InputStream) -> Unit
-) {
-    uri ?: return
-    try {
-        if (uri.isContentScheme()) {
-            val doc = DocumentFile.fromSingleUri(this, uri)
-            doc ?: throw NoStackTraceException("未获取到文件")
-            val fileDoc = FileDoc.fromDocumentFile(doc)
-            contentResolver.openInputStream(uri)!!.use { inputStream ->
-                success.invoke(fileDoc, inputStream)
-            }
-        } else {
-            PermissionsCompat.Builder()
-                .addPermissions(
-                    Permissions.READ_EXTERNAL_STORAGE,
-                    Permissions.WRITE_EXTERNAL_STORAGE
-                )
-                .rationale(R.string.get_storage_per)
-                .onGranted {
-                    RealPathUtil.getPath(this, uri)?.let { path ->
-                        val file = File(path)
-                        val fileDoc = FileDoc.fromFile(file)
-                        FileInputStream(file).use { inputStream ->
-                            success.invoke(fileDoc, inputStream)
-                        }
-                    }
-                }
-                .request()
-        }
-    } catch (e: Exception) {
-        e.printOnDebug()
-        toastOnUi("读取Uri出错\n${e.localizedMessage}")
-        if (e is SecurityException) {
-            throw e
-        }
-    }
-}
+///**
+// * 读取URI
+// */
+//fun AppCompatActivity.readUri(
+//    uri: Uri?,
+//    success: (fileDoc: FileDoc, inputStream: InputStream) -> Unit
+//) {
+//    uri ?: return
+//    try {
+//        if (uri.isContentScheme()) {
+//            val doc = DocumentFile.fromSingleUri(this, uri)
+//            doc ?: throw NoStackTraceException("未获取到文件")
+//            val fileDoc = FileDoc.fromDocumentFile(doc)
+//            contentResolver.openInputStream(uri)!!.use { inputStream ->
+//                success.invoke(fileDoc, inputStream)
+//            }
+//        } else {
+//            PermissionsCompat.Builder()
+//                .addPermissions(
+//                    Permissions.READ_EXTERNAL_STORAGE,
+//                    Permissions.WRITE_EXTERNAL_STORAGE
+//                )
+//                .rationale(R.string.get_storage_per)
+//                .onGranted {
+//                    RealPathUtil.getPath(this, uri)?.let { path ->
+//                        val file = File(path)
+//                        val fileDoc = FileDoc.fromFile(file)
+//                        FileInputStream(file).use { inputStream ->
+//                            success.invoke(fileDoc, inputStream)
+//                        }
+//                    }
+//                }
+//                .request()
+//        }
+//    } catch (e: Exception) {
+//        e.printOnDebug()
+//        toastOnUi("读取Uri出错\n${e.localizedMessage}")
+//        if (e is SecurityException) {
+//            throw e
+//        }
+//    }
+//}
 
-/**
- * 读取URI
- */
-fun Fragment.readUri(uri: Uri?, success: (fileDoc: FileDoc, inputStream: InputStream) -> Unit) {
-    uri ?: return
-    try {
-        if (uri.isContentScheme()) {
-            val doc = DocumentFile.fromSingleUri(requireContext(), uri)
-            doc ?: throw NoStackTraceException("未获取到文件")
-            val fileDoc = FileDoc.fromDocumentFile(doc)
-            requireContext().contentResolver.openInputStream(uri)!!.use { inputStream ->
-                success.invoke(fileDoc, inputStream)
-            }
-        } else {
-            PermissionsCompat.Builder()
-                .addPermissions(
-                    Permissions.READ_EXTERNAL_STORAGE,
-                    Permissions.WRITE_EXTERNAL_STORAGE
-                )
-                .rationale(R.string.get_storage_per)
-                .onGranted {
-                    RealPathUtil.getPath(requireContext(), uri)?.let { path ->
-                        val file = File(path)
-                        val fileDoc = FileDoc.fromFile(file)
-                        FileInputStream(file).use { inputStream ->
-                            success.invoke(fileDoc, inputStream)
-                        }
-
-                    }
-                }
-                .request()
-        }
-    } catch (e: Exception) {
-        e.printOnDebug()
-        toastOnUi("读取Uri出错\n${e.localizedMessage}")
-    }
-}
+///**
+// * 读取URI
+// */
+//fun Fragment.readUri(uri: Uri?, success: (fileDoc: FileDoc, inputStream: InputStream) -> Unit) {
+//    uri ?: return
+//    try {
+//        if (uri.isContentScheme()) {
+//            val doc = DocumentFile.fromSingleUri(requireContext(), uri)
+//            doc ?: throw NoStackTraceException("未获取到文件")
+//            val fileDoc = FileDoc.fromDocumentFile(doc)
+//            requireContext().contentResolver.openInputStream(uri)!!.use { inputStream ->
+//                success.invoke(fileDoc, inputStream)
+//            }
+//        } else {
+//            PermissionsCompat.Builder()
+//                .addPermissions(
+//                    Permissions.READ_EXTERNAL_STORAGE,
+//                    Permissions.WRITE_EXTERNAL_STORAGE
+//                )
+//                .rationale(R.string.get_storage_per)
+//                .onGranted {
+//                    RealPathUtil.getPath(requireContext(), uri)?.let { path ->
+//                        val file = File(path)
+//                        val fileDoc = FileDoc.fromFile(file)
+//                        FileInputStream(file).use { inputStream ->
+//                            success.invoke(fileDoc, inputStream)
+//                        }
+//
+//                    }
+//                }
+//                .request()
+//        }
+//    } catch (e: Exception) {
+//        e.printOnDebug()
+//        toastOnUi("读取Uri出错\n${e.localizedMessage}")
+//    }
+//}
 
 @Throws(Exception::class)
 fun Uri.readBytes(context: Context): ByteArray {

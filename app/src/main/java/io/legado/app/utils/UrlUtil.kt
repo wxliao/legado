@@ -1,5 +1,6 @@
 package io.legado.app.utils
 
+import io.legado.app.BuildConfig
 import io.legado.app.constant.AppLog
 import io.legado.app.constant.AppPattern.semicolonRegex
 import io.legado.app.help.config.AppConfig

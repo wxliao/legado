@@ -20,7 +20,6 @@ import io.legado.app.help.source.SourceVerificationHelp
 import io.legado.app.model.Debug
 import io.legado.app.model.analyzeRule.AnalyzeUrl
 import io.legado.app.model.analyzeRule.QueryTTF
-import io.legado.app.utils.ArchiveUtils
 import io.legado.app.utils.ChineseUtils
 import io.legado.app.utils.EncoderUtils
 import io.legado.app.utils.EncodingDetect
@@ -31,7 +30,6 @@ import io.legado.app.utils.JsURL
 import io.legado.app.utils.MD5Utils
 import io.legado.app.utils.StringUtils
 import io.legado.app.utils.UrlUtil
-import io.legado.app.utils.compress.LibArchiveUtils
 import io.legado.app.utils.createFileReplace
 import io.legado.app.utils.externalCache
 import io.legado.app.utils.fromJsonObject
@@ -566,45 +564,45 @@ interface JsExtensions : JsEncodeUtils {
         return FileUtils.delete(file, true)
     }
 
-    /**
-     * js实现Zip压缩文件解压
-     * @param zipPath 相对路径
-     * @return 相对路径
-     */
-    fun unzipFile(zipPath: String): String {
-        return unArchiveFile(zipPath)
-    }
+//    /**
+//     * js实现Zip压缩文件解压
+//     * @param zipPath 相对路径
+//     * @return 相对路径
+//     */
+//    fun unzipFile(zipPath: String): String {
+//        return unArchiveFile(zipPath)
+//    }
+//
+//    /**
+//     * js实现7Zip压缩文件解压
+//     * @param zipPath 相对路径
+//     * @return 相对路径
+//     */
+//    fun un7zFile(zipPath: String): String {
+//        return unArchiveFile(zipPath)
+//    }
 
-    /**
-     * js实现7Zip压缩文件解压
-     * @param zipPath 相对路径
-     * @return 相对路径
-     */
-    fun un7zFile(zipPath: String): String {
-        return unArchiveFile(zipPath)
-    }
+//    /**
+//     * js实现Rar压缩文件解压
+//     * @param zipPath 相对路径
+//     * @return 相对路径
+//     */
+//    fun unrarFile(zipPath: String): String {
+//        return unArchiveFile(zipPath)
+//    }
 
-    /**
-     * js实现Rar压缩文件解压
-     * @param zipPath 相对路径
-     * @return 相对路径
-     */
-    fun unrarFile(zipPath: String): String {
-        return unArchiveFile(zipPath)
-    }
-
-    /**
-     * js实现压缩文件解压
-     * @param zipPath 相对路径
-     * @return 相对路径
-     */
-    fun unArchiveFile(zipPath: String): String {
-        if (zipPath.isEmpty()) return ""
-        val zipFile = getFile(zipPath)
-        return ArchiveUtils.deCompress(zipFile.absolutePath).let {
-            ArchiveUtils.TEMP_FOLDER_NAME + File.separator + MD5Utils.md5Encode16(zipFile.name)
-        }
-    }
+//    /**
+//     * js实现压缩文件解压
+//     * @param zipPath 相对路径
+//     * @return 相对路径
+//     */
+//    fun unArchiveFile(zipPath: String): String {
+//        if (zipPath.isEmpty()) return ""
+//        val zipFile = getFile(zipPath)
+//        return ArchiveUtils.deCompress(zipFile.absolutePath).let {
+//            ArchiveUtils.TEMP_FOLDER_NAME + File.separator + MD5Utils.md5Encode16(zipFile.name)
+//        }
+//    }
 
     /**
      * js实现文件夹内所有文本文件读取
@@ -646,39 +644,39 @@ interface JsExtensions : JsEncodeUtils {
         return String(byteArray, Charset.forName(charsetName))
     }
 
-    /**
-     * 获取网络zip文件里面的数据
-     * @param url zip文件的链接或十六进制字符串
-     * @param path 所需获取文件在zip内的路径
-     * @return zip指定文件的数据
-     */
-    fun getRarStringContent(url: String, path: String): String {
-        val byteArray = getRarByteArrayContent(url, path) ?: return ""
-        val charsetName = EncodingDetect.getEncode(byteArray)
-        return String(byteArray, Charset.forName(charsetName))
-    }
-
-    fun getRarStringContent(url: String, path: String, charsetName: String): String {
-        val byteArray = getRarByteArrayContent(url, path) ?: return ""
-        return String(byteArray, Charset.forName(charsetName))
-    }
-
-    /**
-     * 获取网络7zip文件里面的数据
-     * @param url 7zip文件的链接或十六进制字符串
-     * @param path 所需获取文件在7zip内的路径
-     * @return zip指定文件的数据
-     */
-    fun get7zStringContent(url: String, path: String): String {
-        val byteArray = get7zByteArrayContent(url, path) ?: return ""
-        val charsetName = EncodingDetect.getEncode(byteArray)
-        return String(byteArray, Charset.forName(charsetName))
-    }
-
-    fun get7zStringContent(url: String, path: String, charsetName: String): String {
-        val byteArray = get7zByteArrayContent(url, path) ?: return ""
-        return String(byteArray, Charset.forName(charsetName))
-    }
+//    /**
+//     * 获取网络zip文件里面的数据
+//     * @param url zip文件的链接或十六进制字符串
+//     * @param path 所需获取文件在zip内的路径
+//     * @return zip指定文件的数据
+//     */
+//    fun getRarStringContent(url: String, path: String): String {
+//        val byteArray = getRarByteArrayContent(url, path) ?: return ""
+//        val charsetName = EncodingDetect.getEncode(byteArray)
+//        return String(byteArray, Charset.forName(charsetName))
+//    }
+//
+//    fun getRarStringContent(url: String, path: String, charsetName: String): String {
+//        val byteArray = getRarByteArrayContent(url, path) ?: return ""
+//        return String(byteArray, Charset.forName(charsetName))
+//    }
+//
+//    /**
+//     * 获取网络7zip文件里面的数据
+//     * @param url 7zip文件的链接或十六进制字符串
+//     * @param path 所需获取文件在7zip内的路径
+//     * @return zip指定文件的数据
+//     */
+//    fun get7zStringContent(url: String, path: String): String {
+//        val byteArray = get7zByteArrayContent(url, path) ?: return ""
+//        val charsetName = EncodingDetect.getEncode(byteArray)
+//        return String(byteArray, Charset.forName(charsetName))
+//    }
+//
+//    fun get7zStringContent(url: String, path: String, charsetName: String): String {
+//        val byteArray = get7zByteArrayContent(url, path) ?: return ""
+//        return String(byteArray, Charset.forName(charsetName))
+//    }
 
     /**
      * 获取网络zip文件里面的数据
@@ -708,41 +706,41 @@ interface JsExtensions : JsEncodeUtils {
         return null
     }
 
-    /**
-     * 获取网络Rar文件里面的数据
-     * @param url Rar文件的链接或十六进制字符串
-     * @param path 所需获取文件在Rar内的路径
-     * @return Rar指定文件的数据
-     */
-    fun getRarByteArrayContent(url: String, path: String): ByteArray? {
-        val bytes = if (url.isAbsUrl()) {
-            AnalyzeUrl(url, source = getSource()).getByteArray()
-        } else {
-            HexUtil.decodeHex(url)
-        }
+//    /**
+//     * 获取网络Rar文件里面的数据
+//     * @param url Rar文件的链接或十六进制字符串
+//     * @param path 所需获取文件在Rar内的路径
+//     * @return Rar指定文件的数据
+//     */
+//    fun getRarByteArrayContent(url: String, path: String): ByteArray? {
+//        val bytes = if (url.isAbsUrl()) {
+//            AnalyzeUrl(url, source = getSource()).getByteArray()
+//        } else {
+//            HexUtil.decodeHex(url)
+//        }
+//
+//        return ByteArrayInputStream(bytes).use {
+//            LibArchiveUtils.getByteArrayContent(it, path)
+//        }
+//    }
 
-        return ByteArrayInputStream(bytes).use {
-            LibArchiveUtils.getByteArrayContent(it, path)
-        }
-    }
-
-    /**
-     * 获取网络7zip文件里面的数据
-     * @param url 7zip文件的链接或十六进制字符串
-     * @param path 所需获取文件在7zip内的路径
-     * @return 7zip指定文件的数据
-     */
-    fun get7zByteArrayContent(url: String, path: String): ByteArray? {
-        val bytes = if (url.isAbsUrl()) {
-            AnalyzeUrl(url, source = getSource()).getByteArray()
-        } else {
-            HexUtil.decodeHex(url)
-        }
-
-        return ByteArrayInputStream(bytes).use {
-            LibArchiveUtils.getByteArrayContent(it, path)
-        }
-    }
+//    /**
+//     * 获取网络7zip文件里面的数据
+//     * @param url 7zip文件的链接或十六进制字符串
+//     * @param path 所需获取文件在7zip内的路径
+//     * @return 7zip指定文件的数据
+//     */
+//    fun get7zByteArrayContent(url: String, path: String): ByteArray? {
+//        val bytes = if (url.isAbsUrl()) {
+//            AnalyzeUrl(url, source = getSource()).getByteArray()
+//        } else {
+//            HexUtil.decodeHex(url)
+//        }
+//
+//        return ByteArrayInputStream(bytes).use {
+//            LibArchiveUtils.getByteArrayContent(it, path)
+//        }
+//    }
 
 
 //******************文件操作************************//

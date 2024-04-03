@@ -100,13 +100,13 @@ val okHttpClient: OkHttpClient by lazy {
             }
             networkResponse
         }
-    if (AppConfig.isCronet) {
-        if (Cronet.loader?.install() == true) {
-            Cronet.interceptor?.let {
-                builder.addInterceptor(it)
-            }
-        }
-    }
+//    if (AppConfig.isCronet) {
+//        if (Cronet.loader?.install() == true) {
+//            Cronet.interceptor?.let {
+//                builder.addInterceptor(it)
+//            }
+//        }
+//    }
     builder.addInterceptor { chain ->
         val request = chain.request()
         val requestBuilder = request.newBuilder()

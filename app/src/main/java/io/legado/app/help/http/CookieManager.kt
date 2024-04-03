@@ -1,7 +1,6 @@
 package io.legado.app.help.http
 
 import io.legado.app.constant.AppLog
-import io.legado.app.data.appDb
 import io.legado.app.help.CacheManager
 import io.legado.app.utils.NetworkUtils
 import okhttp3.Cookie
@@ -134,8 +133,9 @@ object CookieManager {
         return if (cacheCookie != null) {
             cacheCookie
         } else {
-            val cookieBean = appDb.cookieDao.get(domain)
-            cookieBean?.cookie ?: ""
+//            val cookieBean = appDb.cookieDao.get(domain)
+//            cookieBean?.cookie ?: ""
+            ""
         }
     }
 

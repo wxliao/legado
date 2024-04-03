@@ -5,8 +5,6 @@ package io.legado.app.help.http
 import android.text.TextUtils
 import io.legado.app.constant.AppPattern.semicolonRegex
 import io.legado.app.constant.AppPattern.equalsRegex
-import io.legado.app.data.appDb
-import io.legado.app.data.entities.Cookie
 import io.legado.app.help.CacheManager
 import io.legado.app.help.http.CookieManager.getCookieNoSession
 import io.legado.app.help.http.CookieManager.mergeCookiesToMap
@@ -22,8 +20,8 @@ object CookieStore : CookieManagerInterface {
     override fun setCookie(url: String, cookie: String?) {
         val domain = NetworkUtils.getSubDomain(url)
         CacheManager.putMemory("${domain}_cookie", cookie ?: "")
-        val cookieBean = Cookie(domain, cookie ?: "")
-        appDb.cookieDao.insert(cookieBean)
+//        val cookieBean = Cookie(domain, cookie ?: "")
+//        appDb.cookieDao.insert(cookieBean)
     }
 
     override fun replaceCookie(url: String, cookie: String) {
@@ -71,7 +69,7 @@ object CookieStore : CookieManagerInterface {
 
     override fun removeCookie(url: String) {
         val domain = NetworkUtils.getSubDomain(url)
-        appDb.cookieDao.delete(domain)
+//        appDb.cookieDao.delete(domain)
         CacheManager.deleteMemory("${domain}_cookie")
         CacheManager.deleteMemory("${domain}_session_cookie")
         android.webkit.CookieManager.getInstance().removeCookie(url)
@@ -110,7 +108,7 @@ object CookieStore : CookieManagerInterface {
     }
 
     fun clear() {
-        appDb.cookieDao.deleteOkHttp()
+//        appDb.cookieDao.deleteOkHttp()
     }
 
 }

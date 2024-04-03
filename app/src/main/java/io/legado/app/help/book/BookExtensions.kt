@@ -6,7 +6,6 @@ import android.net.Uri
 import com.script.SimpleBindings
 import com.script.rhino.RhinoScriptEngine
 import io.legado.app.constant.*
-import io.legado.app.data.appDb
 import io.legado.app.data.entities.BaseBook
 import io.legado.app.data.entities.Book
 import io.legado.app.data.entities.BookSource
@@ -214,14 +213,14 @@ fun BookSource.getBookType(): Int {
     }
 }
 
-fun Book.sync(oldBook: Book) {
-    val curBook = appDb.bookDao.getBook(oldBook.bookUrl)!!
-    durChapterTime = curBook.durChapterTime
-    durChapterIndex = curBook.durChapterIndex
-    durChapterPos = curBook.durChapterPos
-    durChapterTitle = curBook.durChapterTitle
-    canUpdate = curBook.canUpdate
-}
+//fun Book.sync(oldBook: Book) {
+//    val curBook = appDb.bookDao.getBook(oldBook.bookUrl)!!
+//    durChapterTime = curBook.durChapterTime
+//    durChapterIndex = curBook.durChapterIndex
+//    durChapterPos = curBook.durChapterPos
+//    durChapterTitle = curBook.durChapterTitle
+//    canUpdate = curBook.canUpdate
+//}
 
 fun Book.isSameNameAuthor(other: Any?): Boolean {
     if (other is BaseBook) {

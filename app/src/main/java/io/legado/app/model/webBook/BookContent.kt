@@ -2,7 +2,6 @@ package io.legado.app.model.webBook
 
 import io.legado.app.R
 import io.legado.app.constant.AppPattern
-import io.legado.app.data.appDb
 import io.legado.app.data.entities.Book
 import io.legado.app.data.entities.BookChapter
 import io.legado.app.data.entities.BookSource
@@ -44,12 +43,13 @@ object BookContent {
         )
         Debug.log(bookSource.bookSourceUrl, "≡获取成功:${baseUrl}")
         Debug.log(bookSource.bookSourceUrl, body, state = 40)
-        val mNextChapterUrl = if (nextChapterUrl.isNullOrEmpty()) {
-            appDb.bookChapterDao.getChapter(book.bookUrl, bookChapter.index + 1)?.url
-                ?: appDb.bookChapterDao.getChapter(book.bookUrl, 0)?.url
-        } else {
-            nextChapterUrl
-        }
+//        val mNextChapterUrl = if (nextChapterUrl.isNullOrEmpty()) {
+//            appDb.bookChapterDao.getChapter(book.bookUrl, bookChapter.index + 1)?.url
+//                ?: appDb.bookChapterDao.getChapter(book.bookUrl, 0)?.url
+//        } else {
+//            nextChapterUrl
+//        }
+        val mNextChapterUrl = nextChapterUrl
         val contentList = arrayListOf<String>()
         val nextUrlList = arrayListOf(redirectUrl)
         val contentRule = bookSource.getContentRule()
@@ -70,7 +70,7 @@ object BookContent {
             if (!title.isNullOrBlank()) {
                 bookChapter.title = title
                 bookChapter.titleMD5 = null
-                appDb.bookChapterDao.update(bookChapter)
+//                appDb.bookChapterDao.update(bookChapter)
             }
         }
         var contentData = analyzeContent(

@@ -28,13 +28,13 @@ private fun BookSource.getExploreKindsKey(): String {
     return MD5Utils.md5Encode(bookSourceUrl + exploreUrl)
 }
 
-private fun BookSourcePart.getExploreKindsKey(): String {
-    return getBookSource()!!.getExploreKindsKey()
-}
-
-suspend fun BookSourcePart.exploreKinds(): List<ExploreKind> {
-    return getBookSource()!!.exploreKinds()
-}
+//private fun BookSourcePart.getExploreKindsKey(): String {
+//    return getBookSource()!!.getExploreKindsKey()
+//}
+//
+//suspend fun BookSourcePart.exploreKinds(): List<ExploreKind> {
+//    return getBookSource()!!.exploreKinds()
+//}
 
 suspend fun BookSource.exploreKinds(): List<ExploreKind> {
     val exploreKindsKey = getExploreKindsKey()
@@ -84,13 +84,13 @@ suspend fun BookSource.exploreKinds(): List<ExploreKind> {
     }
 }
 
-suspend fun BookSourcePart.clearExploreKindsCache() {
-    withContext(Dispatchers.IO) {
-        val exploreKindsKey = getExploreKindsKey()
-        aCache.remove(exploreKindsKey)
-        exploreKindsMap.remove(exploreKindsKey)
-    }
-}
+//suspend fun BookSourcePart.clearExploreKindsCache() {
+//    withContext(Dispatchers.IO) {
+//        val exploreKindsKey = getExploreKindsKey()
+//        aCache.remove(exploreKindsKey)
+//        exploreKindsMap.remove(exploreKindsKey)
+//    }
+//}
 
 fun BookSource.contains(word: String?): Boolean {
     if (word.isNullOrEmpty()) {

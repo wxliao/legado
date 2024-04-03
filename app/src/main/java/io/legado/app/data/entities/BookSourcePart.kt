@@ -2,7 +2,6 @@ package io.legado.app.data.entities
 
 import android.text.TextUtils
 import io.legado.app.constant.AppPattern
-import io.legado.app.data.appDb
 import io.legado.app.utils.splitNotBlank
 
 
@@ -47,9 +46,9 @@ data class BookSourcePart(
         }
     }
 
-    fun getBookSource(): BookSource? {
-        return appDb.bookSourceDao.getBookSource(bookSourceUrl)
-    }
+//    fun getBookSource(): BookSource? {
+//        return appDb.bookSourceDao.getBookSource(bookSourceUrl)
+//    }
 
     fun addGroup(groups: String) {
         bookSourceGroup?.splitNotBlank(AppPattern.splitGroupRegex)?.toHashSet()?.let {
@@ -68,6 +67,6 @@ data class BookSourcePart(
 
 }
 
-fun List<BookSourcePart>.toBookSource(): List<BookSource> {
-    return mapNotNull { it.getBookSource() }
-}
+//fun List<BookSourcePart>.toBookSource(): List<BookSource> {
+//    return mapNotNull { it.getBookSource() }
+//}

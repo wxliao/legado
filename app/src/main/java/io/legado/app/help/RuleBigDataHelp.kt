@@ -1,6 +1,5 @@
 package io.legado.app.help
 
-import io.legado.app.data.appDb
 import io.legado.app.utils.FileUtils
 import io.legado.app.utils.MD5Utils
 import io.legado.app.utils.externalFiles
@@ -26,10 +25,10 @@ object RuleBigDataHelp {
                     if (!bookUrlFile.exists()) {
                         FileUtils.delete(it)
                     } else {
-                        val bookUrl = bookUrlFile.readText()
-                        if (appDb.bookDao.has(bookUrl) != true) {
-                            FileUtils.delete(it)
-                        }
+//                        val bookUrl = bookUrlFile.readText()
+//                        if (appDb.bookDao.has(bookUrl) != true) {
+//                            FileUtils.delete(it)
+//                        }
                     }
                 }
             }
@@ -41,10 +40,10 @@ object RuleBigDataHelp {
                     if (!originFile.exists()) {
                         FileUtils.delete(it)
                     } else {
-                        val origin = originFile.readText()
-                        if (appDb.rssSourceDao.has(origin) != true) {
-                            FileUtils.delete(it)
-                        }
+//                        val origin = originFile.readText()
+//                        if (appDb.rssSourceDao.has(origin) != true) {
+//                            FileUtils.delete(it)
+//                        }
                     }
                 }
             }

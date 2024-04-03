@@ -2,20 +2,18 @@ package io.legado.app.help.config
 
 import android.content.SharedPreferences
 import android.os.Build
+import io.legado.app.BuildConfig
 import io.legado.app.constant.AppConst
 import io.legado.app.constant.PreferKey
-import io.legado.app.data.appDb
 import io.legado.app.utils.getPrefBoolean
 import io.legado.app.utils.getPrefInt
 import io.legado.app.utils.getPrefLong
 import io.legado.app.utils.getPrefString
-import io.legado.app.utils.isNightMode
 import io.legado.app.utils.putPrefBoolean
 import io.legado.app.utils.putPrefInt
 import io.legado.app.utils.putPrefLong
 import io.legado.app.utils.putPrefString
 import io.legado.app.utils.removePref
-import io.legado.app.utils.sysConfiguration
 import io.legado.app.utils.toastOnUi
 import splitties.init.appCtx
 
@@ -38,133 +36,133 @@ object AppConfig : SharedPreferences.OnSharedPreferenceChangeListener {
     var useDefaultCover = appCtx.getPrefBoolean(PreferKey.useDefaultCover, false)
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        when (key) {
-            PreferKey.themeMode -> {
-                themeMode = appCtx.getPrefString(PreferKey.themeMode, "0")
-                isEInkMode = themeMode == "3"
-            }
-
-            PreferKey.clickActionTL -> clickActionTL =
-                appCtx.getPrefInt(PreferKey.clickActionTL, 2)
-
-            PreferKey.clickActionTC -> clickActionTC =
-                appCtx.getPrefInt(PreferKey.clickActionTC, 2)
-
-            PreferKey.clickActionTR -> clickActionTR =
-                appCtx.getPrefInt(PreferKey.clickActionTR, 1)
-
-            PreferKey.clickActionML -> clickActionML =
-                appCtx.getPrefInt(PreferKey.clickActionML, 2)
-
-            PreferKey.clickActionMC -> clickActionMC =
-                appCtx.getPrefInt(PreferKey.clickActionMC, 0)
-
-            PreferKey.clickActionMR -> clickActionMR =
-                appCtx.getPrefInt(PreferKey.clickActionMR, 1)
-
-            PreferKey.clickActionBL -> clickActionBL =
-                appCtx.getPrefInt(PreferKey.clickActionBL, 2)
-
-            PreferKey.clickActionBC -> clickActionBC =
-                appCtx.getPrefInt(PreferKey.clickActionBC, 1)
-
-            PreferKey.clickActionBR -> clickActionBR =
-                appCtx.getPrefInt(PreferKey.clickActionBR, 1)
-
-            PreferKey.readBodyToLh -> ReadBookConfig.readBodyToLh =
-                appCtx.getPrefBoolean(PreferKey.readBodyToLh, true)
-
-            PreferKey.useZhLayout -> ReadBookConfig.useZhLayout =
-                appCtx.getPrefBoolean(PreferKey.useZhLayout)
-
-            PreferKey.userAgent -> userAgent = getPrefUserAgent()
-
-            PreferKey.antiAlias -> useAntiAlias = appCtx.getPrefBoolean(PreferKey.antiAlias)
-
-            PreferKey.useDefaultCover -> useDefaultCover =
-                appCtx.getPrefBoolean(PreferKey.useDefaultCover, false)
-
-        }
+//        when (key) {
+//            PreferKey.themeMode -> {
+//                themeMode = appCtx.getPrefString(PreferKey.themeMode, "0")
+//                isEInkMode = themeMode == "3"
+//            }
+//
+//            PreferKey.clickActionTL -> clickActionTL =
+//                appCtx.getPrefInt(PreferKey.clickActionTL, 2)
+//
+//            PreferKey.clickActionTC -> clickActionTC =
+//                appCtx.getPrefInt(PreferKey.clickActionTC, 2)
+//
+//            PreferKey.clickActionTR -> clickActionTR =
+//                appCtx.getPrefInt(PreferKey.clickActionTR, 1)
+//
+//            PreferKey.clickActionML -> clickActionML =
+//                appCtx.getPrefInt(PreferKey.clickActionML, 2)
+//
+//            PreferKey.clickActionMC -> clickActionMC =
+//                appCtx.getPrefInt(PreferKey.clickActionMC, 0)
+//
+//            PreferKey.clickActionMR -> clickActionMR =
+//                appCtx.getPrefInt(PreferKey.clickActionMR, 1)
+//
+//            PreferKey.clickActionBL -> clickActionBL =
+//                appCtx.getPrefInt(PreferKey.clickActionBL, 2)
+//
+//            PreferKey.clickActionBC -> clickActionBC =
+//                appCtx.getPrefInt(PreferKey.clickActionBC, 1)
+//
+//            PreferKey.clickActionBR -> clickActionBR =
+//                appCtx.getPrefInt(PreferKey.clickActionBR, 1)
+//
+//            PreferKey.readBodyToLh -> ReadBookConfig.readBodyToLh =
+//                appCtx.getPrefBoolean(PreferKey.readBodyToLh, true)
+//
+//            PreferKey.useZhLayout -> ReadBookConfig.useZhLayout =
+//                appCtx.getPrefBoolean(PreferKey.useZhLayout)
+//
+//            PreferKey.userAgent -> userAgent = getPrefUserAgent()
+//
+//            PreferKey.antiAlias -> useAntiAlias = appCtx.getPrefBoolean(PreferKey.antiAlias)
+//
+//            PreferKey.useDefaultCover -> useDefaultCover =
+//                appCtx.getPrefBoolean(PreferKey.useDefaultCover, false)
+//
+//        }
     }
 
-    var isNightTheme: Boolean
-        get() = when (themeMode) {
-            "1" -> false
-            "2" -> true
-            "3" -> false
-            else -> sysConfiguration.isNightMode
-        }
-        set(value) {
-            if (isNightTheme != value) {
-                if (value) {
-                    appCtx.putPrefString(PreferKey.themeMode, "2")
-                } else {
-                    appCtx.putPrefString(PreferKey.themeMode, "1")
-                }
-            }
-        }
+//    var isNightTheme: Boolean
+//        get() = when (themeMode) {
+//            "1" -> false
+//            "2" -> true
+//            "3" -> false
+//            else -> sysConfiguration.isNightMode
+//        }
+//        set(value) {
+//            if (isNightTheme != value) {
+//                if (value) {
+//                    appCtx.putPrefString(PreferKey.themeMode, "2")
+//                } else {
+//                    appCtx.putPrefString(PreferKey.themeMode, "1")
+//                }
+//            }
+//        }
 
-    var showUnread: Boolean
-        get() = appCtx.getPrefBoolean(PreferKey.showUnread, true)
-        set(value) {
-            appCtx.putPrefBoolean(PreferKey.showUnread, value)
-        }
-
-    var showLastUpdateTime: Boolean
-        get() = appCtx.getPrefBoolean(PreferKey.showLastUpdateTime, false)
-        set(value) {
-            appCtx.putPrefBoolean(PreferKey.showLastUpdateTime, value)
-        }
-
-    var showWaitUpCount: Boolean
-        get() = appCtx.getPrefBoolean(PreferKey.showWaitUpCount, false)
-        set(value) {
-            appCtx.putPrefBoolean(PreferKey.showWaitUpCount, value)
-        }
-
-    var readBrightness: Int
-        get() = if (isNightTheme) {
-            appCtx.getPrefInt(PreferKey.nightBrightness, 100)
-        } else {
-            appCtx.getPrefInt(PreferKey.brightness, 100)
-        }
-        set(value) {
-            if (isNightTheme) {
-                appCtx.putPrefInt(PreferKey.nightBrightness, value)
-            } else {
-                appCtx.putPrefInt(PreferKey.brightness, value)
-            }
-        }
-
-    val textSelectAble: Boolean
-        get() = appCtx.getPrefBoolean(PreferKey.textSelectAble, true)
-
-    val isTransparentStatusBar: Boolean
-        get() = appCtx.getPrefBoolean(PreferKey.transparentStatusBar, true)
-
-    val immNavigationBar: Boolean
-        get() = appCtx.getPrefBoolean(PreferKey.immNavigationBar, true)
-
-    val screenOrientation: String?
-        get() = appCtx.getPrefString(PreferKey.screenOrientation)
-
-    var bookGroupStyle: Int
-        get() = appCtx.getPrefInt(PreferKey.bookGroupStyle, 0)
-        set(value) {
-            appCtx.putPrefInt(PreferKey.bookGroupStyle, value)
-        }
-
-    var bookshelfLayout: Int
-        get() = appCtx.getPrefInt(PreferKey.bookshelfLayout, 0)
-        set(value) {
-            appCtx.putPrefInt(PreferKey.bookshelfLayout, value)
-        }
-
-    var saveTabPosition: Int
-        get() = appCtx.getPrefInt(PreferKey.saveTabPosition, 0)
-        set(value) {
-            appCtx.putPrefInt(PreferKey.saveTabPosition, value)
-        }
+//    var showUnread: Boolean
+//        get() = appCtx.getPrefBoolean(PreferKey.showUnread, true)
+//        set(value) {
+//            appCtx.putPrefBoolean(PreferKey.showUnread, value)
+//        }
+//
+//    var showLastUpdateTime: Boolean
+//        get() = appCtx.getPrefBoolean(PreferKey.showLastUpdateTime, false)
+//        set(value) {
+//            appCtx.putPrefBoolean(PreferKey.showLastUpdateTime, value)
+//        }
+//
+//    var showWaitUpCount: Boolean
+//        get() = appCtx.getPrefBoolean(PreferKey.showWaitUpCount, false)
+//        set(value) {
+//            appCtx.putPrefBoolean(PreferKey.showWaitUpCount, value)
+//        }
+//
+//    var readBrightness: Int
+//        get() = if (isNightTheme) {
+//            appCtx.getPrefInt(PreferKey.nightBrightness, 100)
+//        } else {
+//            appCtx.getPrefInt(PreferKey.brightness, 100)
+//        }
+//        set(value) {
+//            if (isNightTheme) {
+//                appCtx.putPrefInt(PreferKey.nightBrightness, value)
+//            } else {
+//                appCtx.putPrefInt(PreferKey.brightness, value)
+//            }
+//        }
+//
+//    val textSelectAble: Boolean
+//        get() = appCtx.getPrefBoolean(PreferKey.textSelectAble, true)
+//
+//    val isTransparentStatusBar: Boolean
+//        get() = appCtx.getPrefBoolean(PreferKey.transparentStatusBar, true)
+//
+//    val immNavigationBar: Boolean
+//        get() = appCtx.getPrefBoolean(PreferKey.immNavigationBar, true)
+//
+//    val screenOrientation: String?
+//        get() = appCtx.getPrefString(PreferKey.screenOrientation)
+//
+//    var bookGroupStyle: Int
+//        get() = appCtx.getPrefInt(PreferKey.bookGroupStyle, 0)
+//        set(value) {
+//            appCtx.putPrefInt(PreferKey.bookGroupStyle, value)
+//        }
+//
+//    var bookshelfLayout: Int
+//        get() = appCtx.getPrefInt(PreferKey.bookshelfLayout, 0)
+//        set(value) {
+//            appCtx.putPrefInt(PreferKey.bookshelfLayout, value)
+//        }
+//
+//    var saveTabPosition: Int
+//        get() = appCtx.getPrefInt(PreferKey.saveTabPosition, 0)
+//        set(value) {
+//            appCtx.putPrefInt(PreferKey.saveTabPosition, value)
+//        }
 
     var bookExportFileName: String?
         get() = appCtx.getPrefString(PreferKey.bookExportFileName)
@@ -507,10 +505,10 @@ object AppConfig : SharedPreferences.OnSharedPreferenceChangeListener {
             appCtx.putPrefInt(PreferKey.bookshelfSort, value)
         }
 
-    fun getBookSortByGroupId(groupId: Long): Int {
-        return appDb.bookGroupDao.getByID(groupId)?.getRealBookSort()
-            ?: bookshelfSort
-    }
+//    fun getBookSortByGroupId(groupId: Long): Int {
+//        return appDb.bookGroupDao.getByID(groupId)?.getRealBookSort()
+//            ?: bookshelfSort
+//    }
 
     private fun getPrefUserAgent(): String {
         val ua = appCtx.getPrefString(PreferKey.userAgent)

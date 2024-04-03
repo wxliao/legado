@@ -4,11 +4,6 @@ import io.legado.app.constant.AppLog
 import io.legado.app.data.entities.BaseSource
 import io.legado.app.exception.NoStackTraceException
 import io.legado.app.help.CacheManager
-import io.legado.app.help.IntentData
-import io.legado.app.ui.association.VerificationCodeActivity
-import io.legado.app.ui.browser.WebViewActivity
-import io.legado.app.utils.startActivity
-import splitties.init.appCtx
 import java.util.concurrent.locks.LockSupport
 import kotlin.time.Duration.Companion.minutes
 
@@ -39,12 +34,12 @@ object SourceVerificationHelp {
         CacheManager.delete(key)
 
         if (!useBrowser) {
-            appCtx.startActivity<VerificationCodeActivity> {
-                putExtra("imageUrl", url)
-                putExtra("sourceOrigin", source.getKey())
-                putExtra("sourceName", source.getTag())
-                IntentData.put(key, Thread.currentThread())
-            }
+//            appCtx.startActivity<VerificationCodeActivity> {
+//                putExtra("imageUrl", url)
+//                putExtra("sourceOrigin", source.getKey())
+//                putExtra("sourceName", source.getTag())
+//                IntentData.put(key, Thread.currentThread())
+//            }
         } else {
             startBrowser(source, url, title, true)
         }
@@ -77,21 +72,21 @@ object SourceVerificationHelp {
     ) {
         source ?: throw NoStackTraceException("startBrowser parameter source cannot be null")
         val key = getKey(source)
-        appCtx.startActivity<WebViewActivity> {
-            putExtra("title", title)
-            putExtra("url", url)
-            putExtra("sourceOrigin", source.getKey())
-            putExtra("sourceName", source.getTag())
-            putExtra("sourceVerificationEnable", saveResult)
-            IntentData.put(url, source.getHeaderMap(true))
-            IntentData.put(key, Thread.currentThread())
-        }
+//        appCtx.startActivity<WebViewActivity> {
+//            putExtra("title", title)
+//            putExtra("url", url)
+//            putExtra("sourceOrigin", source.getKey())
+//            putExtra("sourceName", source.getTag())
+//            putExtra("sourceVerificationEnable", saveResult)
+//            IntentData.put(url, source.getHeaderMap(true))
+//            IntentData.put(key, Thread.currentThread())
+//        }
     }
 
 
     fun checkResult(key: String) {
-        CacheManager.get(key) ?: CacheManager.putMemory(key, "")
-        val thread = IntentData.get<Thread>(key)
-        LockSupport.unpark(thread)
+//        CacheManager.get(key) ?: CacheManager.putMemory(key, "")
+//        val thread = IntentData.get<Thread>(key)
+//        LockSupport.unpark(thread)
     }
 }

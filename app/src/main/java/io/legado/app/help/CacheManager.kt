@@ -1,8 +1,6 @@
 package io.legado.app.help
 
 import androidx.collection.LruCache
-import io.legado.app.data.appDb
-import io.legado.app.data.entities.Cache
 import io.legado.app.model.analyzeRule.QueryTTF
 import io.legado.app.utils.ACache
 import io.legado.app.utils.memorySize
@@ -34,9 +32,9 @@ object CacheManager {
             is QueryTTF -> queryTTFMap[key] = Pair(deadline, value)
             is ByteArray -> ACache.get().put(key, value, saveTime)
             else -> {
-                val cache = Cache(key, value.toString(), deadline)
+//                val cache = Cache(key, value.toString(), deadline)
                 putMemory(key, value)
-                appDb.cacheDao.insert(cache)
+//                appDb.cacheDao.insert(cache)
             }
         }
     }
@@ -58,11 +56,11 @@ object CacheManager {
         getFromMemory(key)?.let {
             if (it is String) return it
         }
-        val cache = appDb.cacheDao.get(key)
-        if (cache != null && (cache.deadline == 0L || cache.deadline > System.currentTimeMillis())) {
-            putMemory(key, cache.value ?: "")
-            return cache.value
-        }
+//        val cache = appDb.cacheDao.get(key)
+//        if (cache != null && (cache.deadline == 0L || cache.deadline > System.currentTimeMillis())) {
+//            putMemory(key, cache.value ?: "")
+//            return cache.value
+//        }
         return null
     }
 
@@ -105,7 +103,7 @@ object CacheManager {
     }
 
     fun delete(key: String) {
-        appDb.cacheDao.delete(key)
+//        appDb.cacheDao.delete(key)
         deleteMemory(key)
         ACache.get().remove(key)
     }

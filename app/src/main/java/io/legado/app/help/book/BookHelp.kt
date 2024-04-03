@@ -5,19 +5,11 @@ import android.os.ParcelFileDescriptor
 import androidx.documentfile.provider.DocumentFile
 import io.legado.app.constant.AppLog
 import io.legado.app.constant.AppPattern
-import io.legado.app.constant.EventBus
-import io.legado.app.data.appDb
 import io.legado.app.data.entities.Book
 import io.legado.app.data.entities.BookChapter
 import io.legado.app.data.entities.BookSource
-import io.legado.app.help.config.AppConfig
-import io.legado.app.model.analyzeRule.AnalyzeUrl
-import io.legado.app.model.localBook.LocalBook
-import io.legado.app.utils.ArchiveUtils
 import io.legado.app.utils.FileUtils
-import io.legado.app.utils.ImageUtils
 import io.legado.app.utils.MD5Utils
-import io.legado.app.utils.NetworkUtils
 import io.legado.app.utils.StringUtils
 import io.legado.app.utils.SvgUtils
 import io.legado.app.utils.UrlUtil
@@ -25,26 +17,17 @@ import io.legado.app.utils.exists
 import io.legado.app.utils.externalFiles
 import io.legado.app.utils.getFile
 import io.legado.app.utils.isContentScheme
-import io.legado.app.utils.onEachParallel
-import io.legado.app.utils.postEvent
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.apache.commons.text.similarity.JaccardSimilarity
 import splitties.init.appCtx
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileNotFoundException
-import java.io.FileOutputStream
 import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.regex.Pattern
 import java.util.zip.ZipFile
-import kotlin.coroutines.coroutineContext
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -94,10 +77,10 @@ object BookHelp {
         withContext(IO) {
             val bookFolderNames = hashSetOf<String>()
             val originNames = hashSetOf<String>()
-            appDb.bookDao.all.forEach {
-                bookFolderNames.add(it.getFolderName())
-                if (it.isEpub) originNames.add(it.originName)
-            }
+//            appDb.bookDao.all.forEach {
+//                bookFolderNames.add(it.getFolderName())
+//                if (it.isEpub) originNames.add(it.originName)
+//            }
             downloadDir.getFile(cacheFolderName)
                 .listFiles()?.forEach { bookFile ->
                     if (!bookFolderNames.contains(bookFile.name)) {
@@ -110,7 +93,7 @@ object BookHelp {
                         FileUtils.delete(epubFile.absolutePath)
                     }
                 }
-            FileUtils.delete(ArchiveUtils.TEMP_PATH)
+//            FileUtils.delete(ArchiveUtils.TEMP_PATH)
             val filesDir = appCtx.filesDir
             FileUtils.delete("$filesDir/shareBookSource.json")
             FileUtils.delete("$filesDir/shareRssSource.json")
@@ -127,7 +110,7 @@ object BookHelp {
         try {
             saveText(book, bookChapter, content)
             //saveImages(bookSource, book, bookChapter, content)
-            postEvent(EventBus.SAVE_CONTENT, Pair(book, bookChapter))
+//            postEvent(EventBus.SAVE_CONTENT, Pair(book, bookChapter))
         } catch (e: Exception) {
             e.printStackTrace()
             AppLog.put("保存正文失败 ${book.name} ${bookChapter.title}", e)
@@ -149,66 +132,66 @@ object BookHelp {
         ).writeText(content)
     }
 
-    suspend fun saveImages(
-        bookSource: BookSource,
-        book: Book,
-        bookChapter: BookChapter,
-        content: String
-    ) = coroutineScope {
-        flow {
-            val matcher = AppPattern.imgPattern.matcher(content)
-            while (matcher.find()) {
-                val src = matcher.group(1) ?: continue
-                val mSrc = NetworkUtils.getAbsoluteURL(bookChapter.url, src)
-                emit(mSrc)
-            }
-        }.onEachParallel(AppConfig.threadCount) { mSrc ->
-            saveImage(bookSource, book, mSrc, bookChapter)
-        }.collect()
-    }
+//    suspend fun saveImages(
+//        bookSource: BookSource,
+//        book: Book,
+//        bookChapter: BookChapter,
+//        content: String
+//    ) = coroutineScope {
+//        flow {
+//            val matcher = AppPattern.imgPattern.matcher(content)
+//            while (matcher.find()) {
+//                val src = matcher.group(1) ?: continue
+//                val mSrc = NetworkUtils.getAbsoluteURL(bookChapter.url, src)
+//                emit(mSrc)
+//            }
+//        }.onEachParallel(AppConfig.threadCount) { mSrc ->
+//            saveImage(bookSource, book, mSrc, bookChapter)
+//        }.collect()
+//    }
 
-    suspend fun saveImage(
-        bookSource: BookSource?,
-        book: Book,
-        src: String,
-        chapter: BookChapter? = null
-    ) {
-        while (downloadImages.contains(src)) {
-            delay(100)
-        }
-        if (getImage(book, src).exists()) {
-            return
-        }
-        downloadImages.add(src)
-        val analyzeUrl = AnalyzeUrl(src, source = bookSource)
-        try {
-            val bytes = analyzeUrl.getByteArrayAwait()
-            //某些图片被加密，需要进一步解密
-            ImageUtils.decode(
-                src, bytes, isCover = false, bookSource, book
-            )?.let {
-                if (!checkImage(it)) {
-                    // 如果部分图片失效，每次进入正文都会花很长时间再次获取图片数据
-                    // 所以无论如何都要将数据写入到文件里
-                    // throw NoStackTraceException("数据异常")
-                    AppLog.put("${book.name} ${chapter?.title} 图片 $src 下载错误 数据异常")
-                }
-                FileUtils.createFileIfNotExist(
-                    downloadDir,
-                    cacheFolderName,
-                    book.getFolderName(),
-                    cacheImageFolderName,
-                    "${MD5Utils.md5Encode16(src)}.${getImageSuffix(src)}"
-                ).writeBytes(it)
-            }
-        } catch (e: Exception) {
-            coroutineContext.ensureActive()
-            val msg = "${book.name} ${chapter?.title} 图片 $src 下载失败\n${e.localizedMessage}"
-            AppLog.put(msg, e)
-        } finally {
-            downloadImages.remove(src)
-        }
-    }
+//    suspend fun saveImage(
+//        bookSource: BookSource?,
+//        book: Book,
+//        src: String,
+//        chapter: BookChapter? = null
+//    ) {
+//        while (downloadImages.contains(src)) {
+//            delay(100)
+//        }
+//        if (getImage(book, src).exists()) {
+//            return
+//        }
+//        downloadImages.add(src)
+//        val analyzeUrl = AnalyzeUrl(src, source = bookSource)
+//        try {
+//            val bytes = analyzeUrl.getByteArrayAwait()
+//            //某些图片被加密，需要进一步解密
+//            ImageUtils.decode(
+//                src, bytes, isCover = false, bookSource, book
+//            )?.let {
+//                if (!checkImage(it)) {
+//                    // 如果部分图片失效，每次进入正文都会花很长时间再次获取图片数据
+//                    // 所以无论如何都要将数据写入到文件里
+//                    // throw NoStackTraceException("数据异常")
+//                    AppLog.put("${book.name} ${chapter?.title} 图片 $src 下载错误 数据异常")
+//                }
+//                FileUtils.createFileIfNotExist(
+//                    downloadDir,
+//                    cacheFolderName,
+//                    book.getFolderName(),
+//                    cacheImageFolderName,
+//                    "${MD5Utils.md5Encode16(src)}.${getImageSuffix(src)}"
+//                ).writeBytes(it)
+//            }
+//        } catch (e: Exception) {
+//            coroutineContext.ensureActive()
+//            val msg = "${book.name} ${chapter?.title} 图片 $src 下载失败\n${e.localizedMessage}"
+//            AppLog.put(msg, e)
+//        } finally {
+//            downloadImages.remove(src)
+//        }
+//    }
 
     fun getImage(book: Book, src: String): File {
         return downloadDir.getFile(
@@ -233,11 +216,11 @@ object BookHelp {
             val doc = DocumentFile.fromSingleUri(appCtx, uri)
                 ?: throw IOException("文件不存在")
             if (!file.exists() || doc.lastModified() > book.latestChapterTime) {
-                LocalBook.getBookInputStream(book).use { inputStream ->
-                    FileOutputStream(file).use { outputStream ->
-                        inputStream.copyTo(outputStream)
-                    }
-                }
+//                LocalBook.getBookInputStream(book).use { inputStream ->
+//                    FileOutputStream(file).use { outputStream ->
+//                        inputStream.copyTo(outputStream)
+//                    }
+//                }
             }
             return ZipFile(file)
         }
@@ -346,11 +329,11 @@ object BookHelp {
             return file.readText()
         }
         if (book.isLocal) {
-            val string = LocalBook.getContent(book, bookChapter)
-            if (string != null && book.isEpub) {
-                saveText(book, bookChapter, string)
-            }
-            return string
+//            val string = LocalBook.getContent(book, bookChapter)
+//            if (string != null && book.isEpub) {
+//                saveText(book, bookChapter, string)
+//            }
+//            return string
         }
         return null
     }

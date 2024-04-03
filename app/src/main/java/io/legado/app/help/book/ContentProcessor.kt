@@ -3,16 +3,11 @@ package io.legado.app.help.book
 import android.os.Build
 import io.legado.app.constant.AppLog
 import io.legado.app.constant.AppPattern.spaceRegex
-import io.legado.app.data.appDb
 import io.legado.app.data.entities.Book
 import io.legado.app.data.entities.BookChapter
 import io.legado.app.data.entities.ReplaceRule
 import io.legado.app.exception.RegexTimeoutException
-import io.legado.app.help.config.AppConfig
-import io.legado.app.help.config.ReadBookConfig
-import io.legado.app.utils.ChineseUtils
 import io.legado.app.utils.escapeRegex
-import io.legado.app.utils.replace
 import io.legado.app.utils.stackTraceStr
 import io.legado.app.utils.toastOnUi
 import kotlinx.coroutines.CancellationException
@@ -62,21 +57,21 @@ class ContentProcessor private constructor(
     fun upReplaceRules() {
         titleReplaceRules.run {
             clear()
-            addAll(appDb.replaceRuleDao.findEnabledByTitleScope(bookName, bookOrigin))
+//            addAll(appDb.replaceRuleDao.findEnabledByTitleScope(bookName, bookOrigin))
         }
         contentReplaceRules.run {
             clear()
-            addAll(appDb.replaceRuleDao.findEnabledByContentScope(bookName, bookOrigin))
+//            addAll(appDb.replaceRuleDao.findEnabledByContentScope(bookName, bookOrigin))
         }
     }
 
     private fun upRemoveSameTitle() {
-        val book = appDb.bookDao.getBookByOrigin(bookName, bookOrigin) ?: return
+//        val book = appDb.bookDao.getBookByOrigin(bookName, bookOrigin) ?: return
         removeSameTitleCache.clear()
-        val files = BookHelp.getChapterFiles(book).filter {
-            it.endsWith("nr")
-        }
-        removeSameTitleCache.addAll(files)
+//        val files = BookHelp.getChapterFiles(book).filter {
+//            it.endsWith("nr")
+//        }
+//        removeSameTitleCache.addAll(files)
     }
 
     fun getTitleReplaceRules(): List<ReplaceRule> {
@@ -132,17 +127,17 @@ class ContentProcessor private constructor(
                 //重新分段
                 mContent = ContentHelp.reSegment(mContent, chapter.title)
             }
-            if (chineseConvert) {
-                //简繁转换
-                try {
-                    when (AppConfig.chineseConverterType) {
-                        1 -> mContent = ChineseUtils.t2s(mContent)
-                        2 -> mContent = ChineseUtils.s2t(mContent)
-                    }
-                } catch (e: Exception) {
-                    appCtx.toastOnUi("简繁转换出错")
-                }
-            }
+//            if (chineseConvert) {
+//                //简繁转换
+//                try {
+//                    when (AppConfig.chineseConverterType) {
+//                        1 -> mContent = ChineseUtils.t2s(mContent)
+//                        2 -> mContent = ChineseUtils.s2t(mContent)
+//                    }
+//                } catch (e: Exception) {
+//                    appCtx.toastOnUi("简繁转换出错")
+//                }
+//            }
             if (useReplace && book.getUseReplaceRule()) {
                 //替换
                 effectiveReplaceRules = arrayListOf()
@@ -155,8 +150,7 @@ class ContentProcessor private constructor(
                         val tmp = if (item.isRegex) {
                             mContent.replace(
                                 item.regex,
-                                item.replacement,
-                                item.getValidTimeoutMillisecond()
+                                item.replacement
                             )
                         } else {
                             mContent.replace(item.pattern, item.replacement)
@@ -167,7 +161,7 @@ class ContentProcessor private constructor(
                         }
                     } catch (e: RegexTimeoutException) {
                         item.isEnabled = false
-                        appDb.replaceRuleDao.update(item)
+//                        appDb.replaceRuleDao.update(item)
                         mContent = item.name + e.stackTraceStr
                     } catch (_: CancellationException) {
                     } catch (e: Exception) {
@@ -193,11 +187,12 @@ class ContentProcessor private constructor(
                 it.code <= 0x20 || it == '　'
             }
             if (paragraph.isNotEmpty()) {
-                if (contents.isEmpty() && includeTitle) {
-                    contents.add(paragraph)
-                } else {
-                    contents.add("${ReadBookConfig.paragraphIndent}$paragraph")
-                }
+                contents.add(paragraph)
+//                if (contents.isEmpty() && includeTitle) {
+//                    contents.add(paragraph)
+//                } else {
+//                    contents.add("${ReadBookConfig.paragraphIndent}$paragraph")
+//                }
             }
         }
         return BookContent(sameTitleRemoved, contents, effectiveReplaceRules)
